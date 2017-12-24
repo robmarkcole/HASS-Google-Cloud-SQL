@@ -7,7 +7,7 @@ By default [this data is recorded ](https://home-assistant.io/docs/backend/datab
 
 A solution to this final problem of access to the .db is to setup a database server which you can connect to over the network. Hassio [offers MariaDB server](https://home-assistant.io/addons/mariadb/) for example, although in this case the database is still on the pi (with associated risks). Alternatively if you have access to network storage (NAS) you may wish to setup a database server. This is what I did, running [a MySQL server in Docker on my Synology NAS](https://community.home-assistant.io/t/setting-up-mysql-on-a-synology-nas-docker-container/16253). However if we are serious about long term data storage we should follow the [3-2-1 rule](https://www.acronis.com/en-us/blog/posts/3-2-1-simple-rule-complex-data-protection) and have a backup off-site. Indeed I lost several months work of data from my MySQL db after a problem with Docker. Therefore I investigated cloud storage solutions, which additionally may provide better performance (read times from the db) than my own hosted solution. There are several companies offering databases in the cloud. However I already have an account with Google so decided to investigate their offering.
 
-## Google Cloud SQL ##
+### Google Cloud SQL ###
 Google provide an [interesting variety](https://cloud.google.com/products/) of cloud software solutions/products. Their [Cloud SQL](https://cloud.google.com/sql/) product appeared to meet my technical requirements, and is [reasonably priced](https://cloud.google.com/sql/pricing) (particularly compared to purchasing your own NAS!). Once configured, a Cloud SQL database can be accessed as if it were local, and in my limited experience appears to offer faster read times than my own local solution.
 
 ### Configuring Cloud SQL ###
@@ -21,4 +21,36 @@ I've hidden the ip address of the instance (required later) and put a red box ar
 * **DATABASES :** I created one called **ha_db**
 * **AUTHORISATION :** It is important that you add the IP address which you will connect from, i.e. your home IP. Just google 'whats my ip' and add this address here.
 
-The other tabs cover SSL certificates, automated backups, cloning the database (REPLICAS), and a log of activity (OPERATIONS). I wont cover those here, but as long as your setup USERSM DATABASES and AUTHORISATION then you are good to go using this cloud database with Home-assistant. 
+The other tabs cover SSL certificates, automated backups, cloning the database (REPLICAS), and a log of activity (OPERATIONS). I wont cover those here, but as long as your setup USERSM DATABASES and AUTHORISATION then you are good to go using this cloud database with Home-assistant.
+
+### Configuring Home-assistant ###
+The Home-assistant docs cover the use of external databases as [recorders](https://home-assistant.io/components/recorder/). The minimum that is required to setup a recorded is the URL to the database. I used a little python script to generate the URL, shown below.
+
+```
+settings = {
+   'user': 'hass',
+   'pass': 'password',
+   'host': '192.100.123.100',
+     'db': 'ha_db'
+}
+
+url = 'postgresql+psycopg2://{user}:{pass}@{host}:5432/{db}'.format(**settings)
+```
+Here **password** is whatever you set for the hass user, and **host** us the IP address of the SQL server (greyed out earlier).
+Settings is just a python dictionary and with the values shown the url is:
+
+ **postgresql+psycopg2://hass:password@192.100.123.100:5432/ha_db**
+
+Note that **5432** is the [default port](https://www.postgresql.org/docs/8.3/static/app-postgres.html) but you can change this if you wish. Now you need to enter this into the recorded component config. To configuration.yaml I've added:
+
+```
+recorder:
+  db_url: postgresql+psycopg2://hass:password@192.100.123.100:5432/ha
+```
+Note that [the docs state](https://home-assistant.io/components/recorder/#postgresql) that when using a postgreSQL database with the recorded component, you may need to install the [psycopg2](https://pypi.python.org/pypi/psycopg2/2.7.3.2) package on the host machine (your pi). I didn't need to do this, but you may. Restart Home-assistant and check your logs for any errors. All being well Home-assistant should now be ingesting data into your Google Cloud SQL instance. You can see this happening on the instance dashboard (top image here), with the graph indicating that data is linearly being ingested to the database.
+
+### Data access ###
+The advantage of using a cloud SQL instance is that we can access if from any computer with minimal fuss. I've included a Jupyter notebook showing how to access the cloud database using [SQLAlchemy](https://www.sqlalchemy.org/) and [Pandas](https://pandas.pydata.org/). Theres also [several examples](http://nbviewer.jupyter.org/github/home-assistant/home-assistant-notebooks/tree/master/) on the Home-assistant repo to checkout.  
+
+### Summary ###
+We have seen how to setup a postgrSQL database on Google Cloud and use the Home-assistant recorded component to record data in the database. This allows reliable and low cost long term storage of your data, and enables fuss free access for data analysis using standard tools. 
