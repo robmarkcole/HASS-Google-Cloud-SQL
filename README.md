@@ -11,6 +11,14 @@ A solution to this final problem of access to the .db is to setup a database ser
 Google provide an [interesting variety](https://cloud.google.com/products/) of cloud software solutions/products. Their [Cloud SQL](https://cloud.google.com/sql/) product appeared to meet my technical requirements, and is [reasonably priced](https://cloud.google.com/sql/pricing) (particularly compared to purchasing your own NAS!). Once configured, a Cloud SQL database can be accessed as if it were local, and in my limited experience appears to offer faster read times than my own local solution.
 
 ### Configuring Cloud SQL ###
-Both MySQL and PostgreSQL are offered, and I chose PostgreSQL since I found a [useful guide](https://github.com/naranjja/gcp-jupyter-sql) on Github (Googles own docs being horrendously confusing and convoluted). Follow Googles [getting started](https://cloud.google.com/sql/docs/postgres/quickstart) exercise, which involves creating an instance on their cloud, and using their web terminal to create a database. Next, navigate to the [SQL instances console](https://console.cloud.google.com/projectselector/sql/instances), and select/create a project. From within the project select an SQL instance to administer/configure. I created a PostgreSQL instance with ID 'hass-1'.
+Both MySQL and PostgreSQL are offered, and I chose PostgreSQL since I found a [useful guide](https://github.com/naranjja/gcp-jupyter-sql) on Github (Googles own docs being horrendously confusing and convoluted). Follow Googles [getting started](https://cloud.google.com/sql/docs/postgres/quickstart) exercise, which involves creating an instance on their cloud, and using their web terminal to create a database. Next, navigate to the [SQL instances console](https://console.cloud.google.com/projectselector/sql/instances), and select/create a project. From within the project select an SQL instance to administer/configure. I created a PostgreSQL instance with ID 'hass-1'. The console for this instance is shown below.
 
-ADD IMAGEA
+<img src="https://github.com/robmarkcole/HASS-Google-Cloud-SQL/blob/master/images/cloud_config.png">
+
+I've hidden the ip address of the instance (required later) and put a red box around the tabs I will discuss here.
+
+* **USERS :** here you add users that can access the database, I created a user called **hass**.
+* **DATABASES :** I created one called **ha_db**
+* **AUTHORISATION :** It is important that you add the IP address which you will connect from, i.e. your home IP. Just google 'whats my ip' and add this address here.
+
+The other tabs cover SSL certificates, automated backups, cloning the database (REPLICAS), and a log of activity (OPERATIONS). I wont cover those here, but as long as your setup USERSM DATABASES and AUTHORISATION then you are good to go using this cloud database with Home-assistant. 
