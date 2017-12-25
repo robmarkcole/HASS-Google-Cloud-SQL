@@ -11,7 +11,11 @@ A solution to this final problem of access to the .db is to setup a database ser
 Google provide an [interesting variety](https://cloud.google.com/products/) of cloud software solutions/products. Their [Cloud SQL](https://cloud.google.com/sql/) product appeared to meet my requirements, and is [reasonably priced](https://cloud.google.com/sql/pricing) (particularly compared to purchasing your own NAS!). Once configured, a Cloud SQL database can be accessed without fuss, and in my limited experience appears to offer faster query/response times than my own local solution.
 
 ### Configuring Cloud SQL ###
-Both MySQL and PostgreSQL are offered, and I chose PostgreSQL since I found a [useful guide](https://github.com/naranjja/gcp-jupyter-sql) on Github (Googles own docs being horrendously confusing). Follow the [getting started](https://cloud.google.com/sql/docs/postgres/quickstart) exercise, which involves creating an instance on the cloud, and using the web terminal to create a database. Next, navigate to the [SQL instances console](https://console.cloud.google.com/projectselector/sql/instances), and select/create a project. From within the project select an SQL instance to administer/configure. I created a PostgreSQL instance with identification 'hass-1'. The console for this instance is shown below.
+Both MySQL and PostgreSQL are offered, and I chose PostgreSQL since I found a [useful guide](https://github.com/naranjja/gcp-jupyter-sql) on Github (Googles own docs being horrendously confusing). Follow the [getting started](https://cloud.google.com/sql/docs/postgres/quickstart) exercise, which involves creating an instance on the cloud, and using the web terminal to create a database. Once you've been through that tutorial, navigate to the [SQL instances console](https://console.cloud.google.com/projectselector/sql/instances) and create a new instance. I created an instance with identification 'hass-2' and the following instance configuration which should be [free/lowest cost](http://diyfuturism.com/index.php/2017/12/11/self-hosting-how-to-get-free-and-cheap-linux-virtual-servers/):
+
+<img src="https://github.com/robmarkcole/HASS-Google-Cloud-SQL/blob/master/images/instance-config.png">
+
+The console for this instance is shown below.
 
 <img src="https://github.com/robmarkcole/HASS-Google-Cloud-SQL/blob/master/images/cloud_config.png">
 
