@@ -13,7 +13,9 @@ Google provide an [interesting variety](https://cloud.google.com/products/) of c
 ### Configuring Cloud SQL ###
 Both MySQL and PostgreSQL are offered, and I chose PostgreSQL since I found a [useful guide](https://github.com/naranjja/gcp-jupyter-sql) on Github (Googles own docs being horrendously confusing). Follow the [getting started](https://cloud.google.com/sql/docs/postgres/quickstart) exercise, which involves creating an instance on the cloud, and using the web terminal to create a database. Once you've been through that tutorial, navigate to the [SQL instances console](https://console.cloud.google.com/projectselector/sql/instances) and create a new instance. I created an instance with identification 'hass-2' and the following instance configuration which should be [free/lowest cost](http://diyfuturism.com/index.php/2017/12/11/self-hosting-how-to-get-free-and-cheap-linux-virtual-servers/):
 
-<img src="https://github.com/robmarkcole/HASS-Google-Cloud-SQL/blob/master/images/instance-config.png">
+<p align="center">
+<img src="https://github.com/robmarkcole/HASS-Google-Cloud-SQL/blob/master/images/instance-config.png" width="500">
+</p>
 
 The console for this instance is shown below.
 
